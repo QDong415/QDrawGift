@@ -147,7 +147,7 @@ public class LiveActivity extends AppCompatActivity {
             if (selectedDrawGiftBean != null){
                 //有默认选中的礼物
                 drawGiftView.setCurrentGift(selectedDrawGiftBean.getGiftId() ,
-                        obtainThumbBitmp(selectedDrawGiftBean.getGiftId() ,giftSheetBuilder.getSelectedDrawGiftLargeBitmap()),
+                        obtainThumbBitmap(selectedDrawGiftBean.getGiftId() ,giftSheetBuilder.getSelectedDrawGiftLargeBitmap()),
                         selectedDrawGiftBean.getGiftId());
 
                 drawGiftView.setDrawEnable(selectedDrawGiftBean.drawEnable());
@@ -205,7 +205,7 @@ public class LiveActivity extends AppCompatActivity {
                                     //点选了可画的礼物
 
                                     //bitmap缩放到指定大小
-                                    drawGiftView.setCurrentGift(giftBean.getGiftId(), obtainThumbBitmp(giftBean.getGiftId(), giftBitmap), giftBean.getPrice());
+                                    drawGiftView.setCurrentGift(giftBean.getGiftId(), obtainThumbBitmap(giftBean.getGiftId(), giftBitmap), giftBean.getPrice());
 
                                     bottomGiftSheetBuilder.revokeIv.setVisibility(View.VISIBLE);
                                     bottomGiftSheetBuilder.deleteIv.setVisibility(View.VISIBLE);
@@ -268,7 +268,7 @@ public class LiveActivity extends AppCompatActivity {
     }
 
     //从缓存里取出bitmap
-    private Bitmap obtainThumbBitmp(int giftId , Bitmap largeBitmap){
+    private Bitmap obtainThumbBitmap(int giftId , Bitmap largeBitmap){
         Bitmap thumbGiftBitmap = cacheBitmapByGiftIdMap.get(giftId);
         if (thumbGiftBitmap == null){
             int newSize = dip2px(LiveActivity.this, 20);
@@ -333,7 +333,7 @@ public class LiveActivity extends AppCompatActivity {
 
                                 try {
                                     Bitmap bitmap = futureBitmap.get();
-                                    thumbGiftBitmap = obtainThumbBitmp(giftId, bitmap);
+                                    thumbGiftBitmap = obtainThumbBitmap(giftId, bitmap);
                                     drawGiftModel.setGiftBitmap(thumbGiftBitmap);
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -355,7 +355,7 @@ public class LiveActivity extends AppCompatActivity {
         thread.start();
     }
 
-    //播放礼物draw动画
+    //播放礼物draw动画，insertToFirst = 是否插入到队列前面
     private void playDrawGift(List<DrawGiftModel> allDrawGiftArray, boolean insertToFirst){
         if (playView == null) {
             playView = new DrawGiftPlayView(this);
