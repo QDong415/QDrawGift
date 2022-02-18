@@ -3,6 +3,7 @@ package com.dq.drawgiftdemo;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -14,7 +15,6 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.FutureTarget;
 import com.dq.drawgift.model.DrawGiftModel;
@@ -23,12 +23,10 @@ import com.dq.drawgift.view.DrawGiftView;
 import com.dq.drawgiftdemo.model.GiftBean;
 import com.dq.drawgiftdemo.dialogsheet.BottomGiftSheetBuilder;
 import com.dq.drawgiftdemo.dialogsheet.QBottomSheet;
-
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -173,19 +171,17 @@ public class LiveActivity extends AppCompatActivity {
                             //答：因为onShow里还不知道dialog的contentView的高度
 
                             //问：为啥要知道dialog的contentView的高度？
-                            //答：因为要设置drawGiftView的高度
+                            //答：因为要设置drawGiftView的高度 = screenHeight - contentView.height
 
                             //问：为啥不能把drawGiftView的高度无脑设置为MATCH_PARENT？
                             //答：因为onTouchEvent无法从drawGiftView的Window层 分发到dialog的Window层
 
                             //问：为啥不把drawGiftView添加到decorView层 而是要添加到window层？
-                            //答：因为系统的dialog，popupView都是添加到window层，window层高于decorView层，dialog把touch事件消费了
+                            //答：因为系统的dialog和popupView都是添加到window层，window层高于decorView层，dialog把touch事件消费了
                         }
 
                         @Override
                         public void onGiftSheetDismiss(BottomGiftSheetBuilder bottomGiftSheetBuilder) {
-                            Log.e("dz","onGiftSheetDismiss - " +bottomGiftSheetBuilder.mDialog.getContentView().getHeight());
-
                             //底部弹框消失
                             //移除掉draw礼物View层。
 //                                FrameLayout contentParent = (FrameLayout) getWindow().getDecorView().findViewById(android.R.id.content);
@@ -297,6 +293,7 @@ public class LiveActivity extends AppCompatActivity {
         //把服务器推送来的"礼物位置json" 和 本地的 giftBeanList 一一对应上，找到礼物的bitmap
         final List<DrawGiftModel> allDrawGiftArray = new ArrayList<>();
 
+        //经过测试，这个子线程耗时仅为30ms左右(前提是bitmap已经被是从本地取的)
         Thread thread = new Thread(){
             @Override
             public void run() {
@@ -336,18 +333,13 @@ public class LiveActivity extends AppCompatActivity {
 
                                 try {
                                     Bitmap bitmap = futureBitmap.get();
-
-                                    Log.e("dz","bitmap from Navi =" +System.identityHashCode(bitmap));
-
                                     thumbGiftBitmap = obtainThumbBitmp(giftId, bitmap);
                                     drawGiftModel.setGiftBitmap(thumbGiftBitmap);
-
-                                    Log.e("dz","bitmap from thumb =" +System.identityHashCode(thumbGiftBitmap));
-
-                                } catch (ExecutionException e) {
+                                } catch (Exception e) {
                                     e.printStackTrace();
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
+                                    //万一下载失败了，取本地的图片占位
+                                    Bitmap errorBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.error_draw_gift);
+                                    drawGiftModel.setGiftBitmap(errorBitmap);
                                 }
                             }
                             allDrawGiftArray.add(drawGiftModel);
@@ -358,8 +350,6 @@ public class LiveActivity extends AppCompatActivity {
 
                 Message message = Message.obtain(handler, 1 ,insertToFirst ? 1 : 0 , 0, allDrawGiftArray);
                 handler.sendMessage(message);
-
-                Log.e("dz","prepareShowDrawGift End");
             }
         };
         thread.start();

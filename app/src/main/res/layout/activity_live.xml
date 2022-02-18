@@ -20,7 +20,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="收到普通礼物(拍队)"/>
+            android:text="收到普通礼物(排队)"/>
 
         <Button
             android:id="@+id/receive_vip_btn"
