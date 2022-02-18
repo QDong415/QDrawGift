@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:background="#fff"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/draw_controller_ll"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_height="40dp">
+
+        <TextView
+            android:id="@+id/cost_coin_tv"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="24dp"
+            android:textSize="16sp"
+            android:text="消耗金币：0.0"
+            android:textColor="#000"
+            android:layout_height="wrap_content">
+        </TextView>
+
+
+        <ImageView
+            android:id="@+id/revoke_iv"
+            android:layout_width="wrap_content"
+            android:layout_marginRight="24dp"
+            android:src="@mipmap/live_gift_btn_history_normal"
+            android:layout_height="wrap_content"></ImageView>
+
+        <ImageView
+            android:id="@+id/delete_iv"
+            android:layout_marginRight="24dp"
+            android:layout_width="wrap_content"
+            android:src="@mipmap/live_gift_btn_delete_normal"
+            android:layout_height="wrap_content"></ImageView>
+
+    </LinearLayout>
+
+    <com.dq.drawgiftdemo.dialogsheet.GiftPagerView
+        android:layout_width="match_parent"
+        android:layout_height="276dp"
+        android:id="@+id/pager_view"
+        />
+
+    <com.dq.drawgiftdemo.dialogsheet.GiftIndicatorView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/indicator_view"
+        android:paddingBottom="3dp"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="#F3F3F3"
+        android:layout_height="52dp">
+
+        <ImageView
+            android:layout_width="26dp"
+            android:layout_marginLeft="16dp"
+            android:src="@mipmap/gift_gold_image"
+            android:layout_height="26dp">
+        </ImageView>
+
+        <TextView
+            android:id="@+id/my_coin_tv"
+            android:layout_width="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:textSize="16sp"
+            android:text="我的金币：0"
+            android:textColor="#000"
+            android:layout_height="wrap_content">
+        </TextView>
+
+        <View android:layout_weight="1"
+            android:layout_height="1dp"
+            android:layout_width="0dp"></View>
+
+        <TextView
+            android:id="@+id/send_tv"
+            android:layout_width="64dp"
+            android:textSize="15sp"
+            android:gravity="center"
+            android:layout_marginRight="14dp"
+            android:text="发送"
+            android:background="@drawable/blue_round"
+            android:textColor="@color/white"
+            android:layout_height="32dp">
+        </TextView>
+
+    </LinearLayout>
+
+
+</LinearLayout>

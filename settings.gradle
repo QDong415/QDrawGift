@@ -1,0 +1,3 @@
+rootProject.name = "DrawGiftDemo"
+include ':app'
+include ':drawgift'
