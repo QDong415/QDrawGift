@@ -11,6 +11,7 @@ import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -99,21 +100,17 @@ public class DrawGiftView extends View {
         }
     }
 
+    //正常情况下一个View的如果Down事件return false，那么就吃不到后面的move事件了。
+    //但是本View是被windowManager.addView(view) 添加到windowManager层。那么后续的move up都肯定会触发
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         int action = event.getAction();
         switch (action) {
             case MotionEvent.ACTION_DOWN:
-                if (!drawEnable) {
-                    //不允许画
+                if (!drawEnable || currentGiftBitmap == null) {
+                    //不允许画 || 当前没选中任何礼物
                     return super.onTouchEvent(event);
                 }
-
-                if (currentGiftBitmap == null) {
-                    //当前没选中任何礼物
-                    return super.onTouchEvent(event);
-                }
-
                 //点下
                 mLastX = checkIfBelongHorizontalEdge(event.getX());
                 mLastY = checkIfBelongVerticalEdge(event.getY());
@@ -125,6 +122,10 @@ public class DrawGiftView extends View {
 
                 return true;
             case MotionEvent.ACTION_MOVE:
+                if (!drawEnable || currentGiftBitmap == null) {
+                    //不允许画 || 当前没选中任何礼物
+                    return super.onTouchEvent(event);
+                }
                 float moveX = checkIfBelongHorizontalEdge(event.getX());
                 float moveY = checkIfBelongVerticalEdge(event.getY());
 
@@ -154,6 +155,7 @@ public class DrawGiftView extends View {
                 break;
             case MotionEvent.ACTION_UP:
                 if (!drawEnable && onDrawGiftListener != null) {
+                    //不允许画，那么要回调up事件，为了让底部的sheet收起来
                     onDrawGiftListener.onTouchEventUpWhenDrawDisable(this);
                 }
 

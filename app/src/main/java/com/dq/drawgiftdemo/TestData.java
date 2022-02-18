@@ -34,8 +34,8 @@ public class TestData {
         giftBean.setGiftId(3);
         giftBean.setPrice(10);//礼物价格
         giftBean.setType(1);//0普通礼物，1可以涂鸦的礼物，2全屏动画礼物
-        giftBean.setPicture("https://upload-images.jianshu.io/upload_images/26002059-ab0005c2d44626ce.png");
-        giftBean.setTitle("蓝玫瑰");
+        giftBean.setPicture("https://upload-images.jianshu.io/upload_images/26002059-a04db2e36368a8ec.png");
+        giftBean.setTitle("钻石");
         giftBeanList.add(giftBean);
 
         giftBean = new GiftBean();
@@ -66,8 +66,8 @@ public class TestData {
         giftBean.setGiftId(7);
         giftBean.setPrice(10);//礼物价格
         giftBean.setType(1);//0普通礼物，1可以涂鸦的礼物，2全屏动画礼物
-        giftBean.setPicture("https://upload-images.jianshu.io/upload_images/26002059-ab0005c2d44626ce.png");
-        giftBean.setTitle("蓝玫瑰");
+        giftBean.setPicture("https://upload-images.jianshu.io/upload_images/26002059-a04db2e36368a8ec.png");
+        giftBean.setTitle("钻石");
         giftBeanList.add(giftBean);
 
         giftBean = new GiftBean();
@@ -75,7 +75,7 @@ public class TestData {
         giftBean.setPrice(1000);//礼物价格
         giftBean.setType(2);//0普通礼物，1可以涂鸦的礼物，2全屏动画礼物
         giftBean.setPicture("https://upload-images.jianshu.io/upload_images/26002059-8151fe05b36980e9.png");
-        giftBean.setTitle("贵重礼物2");
+        giftBean.setTitle("非手绘2");
         giftBeanList.add(giftBean);
 
         giftBean = new GiftBean();
@@ -83,7 +83,7 @@ public class TestData {
         giftBean.setPrice(1000);//礼物价格
         giftBean.setType(2);//0普通礼物，1可以涂鸦的礼物，2全屏动画礼物
         giftBean.setPicture("https://upload-images.jianshu.io/upload_images/26002059-8151fe05b36980e9.png");
-        giftBean.setTitle("贵重礼物3");
+        giftBean.setTitle("非手绘3");
         giftBeanList.add(giftBean);
     }
 

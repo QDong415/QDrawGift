@@ -258,7 +258,7 @@ public class LiveActivity extends AppCompatActivity {
                                     public void run() {
                                         prepareShowDrawGift(drawFixedArray , false);
                                     }
-                                }, 1000);
+                                }, 700);
                             } else {
                                 //非手绘礼物
                             }
