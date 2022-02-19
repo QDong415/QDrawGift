@@ -32,7 +32,7 @@ A Gift Painter useful in Living Room. Support paint+play+bottomSheet
 	}
 
 	dependencies {
-	        implementation 'com.github.QDong415:QDrawGift:v1.1'
+	        implementation 'com.github.QDong415:QDrawGift:v1.1.1'
 	}
 ```
 
