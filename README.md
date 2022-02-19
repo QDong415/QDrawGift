@@ -19,7 +19,7 @@ A Gift Painter useful in Living Room. Support paint+play+bottomSheet
 - ✅无内存泄漏。代码清晰明确，注释量比代码都多
 
 ## 效果gif图（Gif图有点卡，实际运行一点都不卡）：
-![](https://upload-images.jianshu.io/upload_images/26002059-ea1445f2b53785ff.gif)
+![](https://upload-images.jianshu.io/upload_images/26002059-48456ffa60a85222.gif)
 
 
 ## 导入
