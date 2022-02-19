@@ -168,8 +168,8 @@ public class DrawGiftPlayView extends View {
         //添加到队列
         if (insertToFirst){
             if (allDrawGiftsLinkedList.size() > 0){
-                //说明队列里已经有画在draw了。由于我目前的逻辑是：取first节点，画完了再remove；而不是先remove再设置为全局变量
-                //所以要插入到第1个元素
+                //说明队列里已经有画在draw了。
+                //由于我目前的逻辑是：取first节点，画完了再remove；而不是先remove再设置为全局变量。所以要插入到第1个元素
                 allDrawGiftsLinkedList.add(1, currentDrawGiftArray);
             } else {
                 //说明当前列表是空的，直接插入到表头
