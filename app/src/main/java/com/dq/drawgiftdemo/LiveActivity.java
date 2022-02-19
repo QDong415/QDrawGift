@@ -148,7 +148,7 @@ public class LiveActivity extends AppCompatActivity {
                 //有默认选中的礼物
                 drawGiftView.setCurrentGift(selectedDrawGiftBean.getGiftId() ,
                         obtainThumbBitmap(selectedDrawGiftBean.getGiftId() ,giftSheetBuilder.getSelectedDrawGiftLargeBitmap()),
-                        selectedDrawGiftBean.getGiftId());
+                        selectedDrawGiftBean.getPrice());
 
                 drawGiftView.setDrawEnable(selectedDrawGiftBean.drawEnable());
             }
