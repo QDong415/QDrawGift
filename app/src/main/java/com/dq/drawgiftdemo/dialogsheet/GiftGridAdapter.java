@@ -1,6 +1,7 @@
 package com.dq.drawgiftdemo.dialogsheet;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +14,16 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.dq.drawgiftdemo.R;
 import com.dq.drawgiftdemo.model.GiftBean;
 
+import java.util.LinkedList;
 import java.util.List;
 
 
 public class GiftGridAdapter extends ArrayAdapter<GiftBean>{
 
     private Context context;
+
+    //为了预加载，里面存的是adapter的itemView，你可以不用
+    public LinkedList<View> cachedItemViewList;
 
     public GiftGridAdapter(Context context, int textViewResourceId, List<GiftBean> objects) {
         super(context, textViewResourceId, objects);
@@ -28,7 +33,13 @@ public class GiftGridAdapter extends ArrayAdapter<GiftBean>{
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if(convertView == null){
-            convertView = View.inflate(getContext(), R.layout.griditem_gift, null);
+            convertView = cachedItemViewList.poll();
+            if (convertView == null) {
+                convertView = View.inflate(getContext(), R.layout.griditem_gift, null);
+                Log.e("dq","getView = 没用上缓存");
+            } else {
+                Log.e("dq","getView = 用上缓存");
+            }
         }
         GiftBean emojicon = getItem(position);
         ImageView imageView = (ImageView) convertView.findViewById(R.id.iv_expression);

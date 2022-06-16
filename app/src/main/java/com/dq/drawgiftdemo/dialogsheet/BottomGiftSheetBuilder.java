@@ -11,6 +11,8 @@ import android.widget.TextView;
 import androidx.viewpager.widget.ViewPager;
 import com.dq.drawgiftdemo.R;
 import com.dq.drawgiftdemo.model.GiftBean;
+
+import java.util.LinkedList;
 import java.util.List;
 
 public class BottomGiftSheetBuilder implements ViewPager.OnPageChangeListener, QBottomSheet.OnBottomSheetShowListener, DialogInterface.OnDismissListener {
@@ -37,21 +39,23 @@ public class BottomGiftSheetBuilder implements ViewPager.OnPageChangeListener, Q
         mContext = context;
     }
 
-    public QBottomSheet build() {
+    public QBottomSheet build(View cachedBottomGiftSheetView) {
         mDialog = new QBottomSheet(mContext);
-        View contentView = (LinearLayout) View.inflate(mContext, getContentViewLayoutId(), null);;
-        mDialog.setContentView(contentView,
-                new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        if (cachedBottomGiftSheetView != null) {
+            mDialog.setContentView(cachedBottomGiftSheetView,
+                    new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        } else {
+            View contentView = (LinearLayout) View.inflate(mContext, R.layout.bottom_sheet_gift, null);;
+            mDialog.setContentView(contentView,
+                    new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        }
         mDialog.setOnBottomSheetShowListener(this);
         mDialog.setOnDismissListener(this);
         return mDialog;
     }
 
-    protected int getContentViewLayoutId() {
-        return R.layout.bottom_sheet_gift;
-    }
-
-    public void setGiftList(final Context context, final List<GiftBean> giftList
+    public void setGiftList(final Context context, final List<GiftBean> giftList ,LinkedList<View> cachedItemViewList
             , final BottomGiftSheetListener onBottomGiftSheetListener){
 
         this.onBottomGiftSheetListener = onBottomGiftSheetListener;
@@ -63,6 +67,7 @@ public class BottomGiftSheetBuilder implements ViewPager.OnPageChangeListener, Q
         revokeIv = (ImageView) mDialog.findViewById(R.id.revoke_iv);
         deleteIv = (ImageView) mDialog.findViewById(R.id.delete_iv);
 
+        pagerView.cachedItemViewList = cachedItemViewList;
         int pagesize = pagerView.init(context,giftList);
         indicatorView.init(pagesize);
         pagerView.addOnPageChangeListener(this);

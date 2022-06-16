@@ -6,10 +6,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Looper;
 import android.os.Message;
+import android.os.MessageQueue;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.SparseArray;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -24,11 +28,14 @@ import com.dq.drawgiftdemo.model.GiftBean;
 import com.dq.drawgiftdemo.dialogsheet.BottomGiftSheetBuilder;
 import com.dq.drawgiftdemo.dialogsheet.QBottomSheet;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class LiveActivity extends AppCompatActivity {
 
@@ -46,6 +53,10 @@ public class LiveActivity extends AppCompatActivity {
     //为了节省内存。通过giftId当做Key来缓存Bitmap（如果你的giftId是String，那么这里要修改成HashMap<String,Bitmap>）
     //其实这个东西你可以做成单例。我现在没用单例，就需要每次进入直播间都重新缓存
     private SparseArray<Bitmap> cacheBitmapByGiftIdMap;
+
+    //为了预加载，里面存的是adapter的itemView，你可以不用
+    private LinkedList<View> cachedItemViewList = new LinkedList<>();
+    private View cachedBottomGiftSheetView;
 
     private MyHandler handler = new MyHandler(this);
     private static class MyHandler extends Handler {
@@ -124,6 +135,31 @@ public class LiveActivity extends AppCompatActivity {
                 prepareShowDrawGift(TestData.createRandomGifts(true) , true);
             }
         });
+
+        //为了预加载gridview里的itemView，你可以不用
+        Looper.myQueue().addIdleHandler(new MessageQueue.IdleHandler() {
+            @Override
+            public boolean queueIdle() {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        long nowTime = System.currentTimeMillis();
+
+                        for (int i = 0; i < giftBeanList.size() && i < 16 ; i++) {
+                            View itemView = LayoutInflater.from(LiveActivity.this).inflate(R.layout.griditem_gift, null);
+                            itemView.setLayoutParams(new RecyclerView.LayoutParams(
+                                    ViewGroup.LayoutParams.MATCH_PARENT ,ViewGroup.LayoutParams.WRAP_CONTENT));
+                            cachedItemViewList.add(itemView);
+                        }
+
+                        cachedBottomGiftSheetView = LayoutInflater.from(LiveActivity.this).inflate(R.layout.bottom_sheet_gift, null);
+
+                        Log.e("dq","预加载耗时为：" + (System.currentTimeMillis() - nowTime) + "毫秒");//方法运行时间为：2毫秒
+                    }
+                }).start();
+                return false;
+            }
+        });
     }
 
     private DrawGiftView lazyDrawGiftView(){
@@ -160,9 +196,9 @@ public class LiveActivity extends AppCompatActivity {
         if (giftSheetBuilder == null){
             giftSheetBuilder = new BottomGiftSheetBuilder(LiveActivity.this);
 
-            QBottomSheet bottomSheet = giftSheetBuilder.build();
+            QBottomSheet bottomSheet = giftSheetBuilder.build(cachedBottomGiftSheetView);
 
-            giftSheetBuilder.setGiftList(LiveActivity.this, giftBeanList
+            giftSheetBuilder.setGiftList(LiveActivity.this, giftBeanList , cachedItemViewList
                     , new BottomGiftSheetBuilder.BottomGiftSheetListener() {
                         @Override
                         public void onGiftSheetShow(BottomGiftSheetBuilder bottomGiftSheetBuilder) {
@@ -185,6 +221,7 @@ public class LiveActivity extends AppCompatActivity {
                             //底部弹框消失
                             //移除掉draw礼物View层。
 //                                FrameLayout contentParent = (FrameLayout) getWindow().getDecorView().findViewById(android.R.id.content);
+
                             WindowManager mWindowManager = getWindowManager();
                             mWindowManager.removeView(drawGiftView);
                             //如果不 = null，leakCanary会报内存泄漏，但其实是误报
@@ -297,7 +334,6 @@ public class LiveActivity extends AppCompatActivity {
         Thread thread = new Thread(){
             @Override
             public void run() {
-                Log.e("dz","prepareShowDrawGift start");
 
                 //本机屏幕宽高
                 DisplayMetrics displayMetrics = new DisplayMetrics();

@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -18,12 +19,16 @@ import androidx.viewpager.widget.ViewPager;
 import com.dq.drawgiftdemo.R;
 import com.dq.drawgiftdemo.model.GiftBean;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class GiftPagerView extends ViewPager {
 
     private int currentSelectGiftTag = -1;// indexInManager
     private View currentSelectGiftView ;
+
+    //为了预加载，里面存的是adapter的itemView，你可以不用
+    public LinkedList<View> cachedItemViewList;
 
     private final static int bigEmojiconRows = 2;
     private final static int bigEmojiconColumns = 4;
@@ -78,6 +83,7 @@ public class GiftPagerView extends ViewPager {
             }
 
             GiftGridAdapter gridAdapter = new GiftGridAdapter(context, 1, list);
+            gridAdapter.cachedItemViewList = cachedItemViewList;
             gv.setAdapter(gridAdapter);
             gv.setOnItemClickListener(new OnItemClickListener() {
 
